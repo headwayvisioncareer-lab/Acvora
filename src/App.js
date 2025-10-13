@@ -16,6 +16,9 @@ import ExploreCoursesPage from "./Pages/ExploreCoursesPage";
 import MyProfile from "./components/NavDropdown/MyProfile"
 import CourseRegister from "./Pages/CourseRegister";
 
+//Admin components
+import ScholarForm from "./adminComponents/ScholarForm";
+
 //Agent 
 import AgentDashboard from "./AgentDashboard/Agent";
 
@@ -38,6 +41,7 @@ import Scholarshiploans from "./components/NavDropdown/Scholarshiploans"
 import ContactUs from "./FooterPages/ContactUs";
 import Privacy from "./FooterPages/Privacy";
 import Abtnv from "./FooterPages/Abtnv";
+
 
 
 function App() {
@@ -68,7 +72,7 @@ function App() {
           <Route path="/explorecourses" element={<ExploreCoursesPage />}></Route>
           <Route path="/courseregister" element={<CourseRegister />}></Route>
           <Route path="/scholarship" element={<Scholarship />}></Route>
-
+          <Route path="/scholarform" element={<ScholarForm />}></Route>
 
 
          {/* Agent */}
