@@ -2,6 +2,8 @@ import React, { useMemo, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import "./Scholarship.css";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 /* ---------------- Hero Section ---------------- */
 function HeroSection() {
@@ -224,6 +226,8 @@ export default function Scholar() {
   }, [scholarships, query, filters, activeTab]);
 
   return (
+    <>
+    <Navbar />
     <div className="scholar-main">
       <HeroSection />
       <SearchBar onSearch={setQuery} />
@@ -266,5 +270,7 @@ export default function Scholar() {
         </motion.div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
