@@ -20,6 +20,7 @@ const navLinks = [
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [mobileUserMenuOpen, setMobileUserMenuOpen] = useState(false); // ✅ New state for mobile submenu
   const [user, setUser] = useState(null);
   const [userId, setUserId] = useState(null); // ✅ Initialize as null
   const [displayName, setDisplayName] = useState(""); // ✅ Initialize as empty
@@ -41,6 +42,7 @@ const Navbar = () => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       setUserMenuOpen(false);
+      setMobileUserMenuOpen(false); // ✅ Reset mobile submenu on auth change
 
       if (!currentUser) {
         if (isMounted) {
@@ -289,18 +291,103 @@ const Navbar = () => {
           <div className="flex flex-col gap-3 px-6 pb-4">
             {userId ? (
               <>
-                <div className="px-4 py-2 rounded-lg bg-gray-700 text-center">
-                  {displayName || "Account"}
-                </div>
+                {/* ✅ Make "Hi, {displayName}" a clickable button to toggle submenu */}
                 <button
-                  onClick={() => {
-                    handleLogout();
-                    setIsOpen(false);
-                  }}
-                  className="px-4 py-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-center"
+                  onClick={() => setMobileUserMenuOpen((prev) => !prev)}
+                  className="px-4 py-2 rounded-lg bg-gray-700 hover:bg-yellow-500 text-center font-medium"
                 >
-                  Logout
+                  Hi, {displayName || "Account"}
                 </button>
+
+                {/* ✅ Conditionally render the submenu */}
+                {mobileUserMenuOpen && (
+                  <ul className="flex flex-col space-y-1 text-sm bg-gray-700 rounded-lg p-2">
+                    <li>
+                      <NavLink
+                        to="/myprofile"
+                        onClick={() => {
+                          setMobileUserMenuOpen(false);
+                          setIsOpen(false);
+                        }}
+                        className="block px-4 py-2 hover:bg-yellow-500 rounded"
+                      >
+                        My Profile
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/course"
+                        onClick={() => {
+                          setMobileUserMenuOpen(false);
+                          setIsOpen(false);
+                        }}
+                        className="block px-4 py-2 hover:bg-yellow-500 rounded"
+                      >
+                        My Courses
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/saved-scholarships"
+                        onClick={() => {
+                          setMobileUserMenuOpen(false);
+                          setIsOpen(false);
+                        }}
+                        className="block px-4 py-2 hover:bg-yellow-500 rounded"
+                      >
+                        Scholarships
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/Savedscholarships" // Note: Consider fixing this path if it's a typo (e.g., to "/study-material")
+                        onClick={() => {
+                          setMobileUserMenuOpen(false);
+                          setIsOpen(false);
+                        }}
+                        className="block px-4 py-2 hover:bg-yellow-500 rounded"
+                      >
+                        Study Material
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/exam"
+                        onClick={() => {
+                          setMobileUserMenuOpen(false);
+                          setIsOpen(false);
+                        }}
+                        className="block px-4 py-2 hover:bg-yellow-500 rounded"
+                      >
+                        Exams
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/settings"
+                        onClick={() => {
+                          setMobileUserMenuOpen(false);
+                          setIsOpen(false);
+                        }}
+                        className="block px-4 py-2 hover:bg-yellow-500 rounded"
+                      >
+                        Settings
+                      </NavLink>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setMobileUserMenuOpen(false);
+                          setIsOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-red-400 hover:bg-yellow-500 hover:text-white rounded"
+                      >
+                        Logout
+                      </button>
+                    </li>
+                  </ul>
+                )}
               </>
             ) : (
               <>

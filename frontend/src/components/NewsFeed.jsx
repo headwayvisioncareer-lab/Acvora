@@ -276,7 +276,7 @@ const NewsFeed = () => {
     ];
 
     return (
-      <div className="grid grid-cols-7 gap-1 text-center">
+      <div className="grid grid-cols-7 gap-1 text-center text-xs sm:text-sm">
         {["S", "M", "T", "W", "T", "F", "S"].map((wd) => (
           <div key={wd} className="font-semibold text-yellow-600">
             {wd}
@@ -289,9 +289,7 @@ const NewsFeed = () => {
         ))}
 
         {combinedDays.map(({ day, month }, idx) => {
-          const dateStr = `2025-${month === "Sep" ? "09" : "10"}-${
-            day < 10 ? "0" + day : day
-          }`;
+          const dateStr = `2025-${month === "Sep" ? "09" : "10"}-${day < 10 ? "0" + day : day}`;
           const isEventDay = upcomingEventsDates.includes(dateStr);
           const isSep = month === "Sep";
           const isOct = month === "Oct";
@@ -301,17 +299,13 @@ const NewsFeed = () => {
             return (
               <div
                 key={`${month}-${day}`}
-                className={`cursor-default rounded ${
+                className={`cursor-default rounded p-1 select-none transition text-xs sm:text-sm ${
                   isEventDay
                     ? "bg-gray-400 text-white"
                     : "text-gray-700 hover:bg-gray-100"
-                } p-1 select-none transition`}
-                title={`${month} ${day}, ${
-                  isEventDay ? "Upcoming Event" : ""
                 }`}
-                aria-label={`${month} ${day} ${
-                  isEventDay ? "has upcoming event" : "no event"
-                }`}
+                title={`${month} ${day}, ${isEventDay ? "Upcoming Event" : ""}`}
+                aria-label={`${month} ${day} ${isEventDay ? "has upcoming event" : "no event"}`}
               >
                 {day}
               </div>
@@ -325,26 +319,17 @@ const NewsFeed = () => {
 
   return (
     <>
-    <Navbar />
-    <div className="min-h-screen bg-gray-100 text-gray-800 font-sans flex flex-col">
-      {/* Header Section
-      <header className="bg-gray-800 p-6 shadow-lg sticky top-0 z-20 text-white">
-        <h1 className="text-3xl font-bold mb-4 select-none">
-           News & Feeds
-        </h1>
-
-        
-      </header> */}
-
-      {/* Quick Filter Bar */}
-        <div className="mt-5 ml-4 flex flex-wrap items-center gap-4">
+      <Navbar />
+      <div className="min-h-screen bg-gray-100 text-gray-800 font-sans flex flex-col">
+        {/* Quick Filter Bar */}
+        <div className="mt-5 ml-4 mr-4 flex flex-col sm:flex-row sm:items-center gap-4 px-4 sm:px-0">
           {/* Categories */}
-          <nav className="flex space-x-4 text-gray-900 font-semibold">
+          <div className="flex overflow-x-auto space-x-2 sm:space-x-4 pb-2 sm:pb-0 text-sm sm:text-base">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setCategory(cat)}
-                className={`transition-colors duration-300 px-3 py-1 rounded-md hover:bg-yellow-500 hover:text-white focus:outline-none ${
+                className={`transition-colors duration-300 px-3 py-1 rounded-md hover:bg-yellow-500 hover:text-white focus:outline-none whitespace-nowrap flex-shrink-0 ${
                   category === cat
                     ? "bg-gray-800 text-yellow-500 shadow"
                     : "bg-gray-800 text-yellow-500"
@@ -354,7 +339,7 @@ const NewsFeed = () => {
                 {cat}
               </button>
             ))}
-          </nav>
+          </div>
 
           {/* Search Box */}
           <input
@@ -362,7 +347,7 @@ const NewsFeed = () => {
             placeholder="Search news, institutes, keywords"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="flex-grow max-w-sm rounded-md px-3 py-2 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
+            className="flex-grow w-full sm:max-w-sm rounded-md px-3 py-2 border border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
             aria-label="Search news, institutes, keywords"
           />
 
@@ -370,7 +355,7 @@ const NewsFeed = () => {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
+            className="w-full sm:w-auto rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 transition text-sm sm:text-base"
             aria-label="Sort news"
           >
             <option className="text-gray-800 focus:gray-200">Latest</option>
@@ -378,305 +363,262 @@ const NewsFeed = () => {
           </select>
         </div>
 
-      {/* Content Section */}
-      <div className="flex max-w-7xl mx-auto pt-6 px-4 gap-6 flex-1">
-        {/* Left Sidebar Filters */}
-        <aside className="w-72 sticky top-20 self-start bg-white rounded-lg p-6 shadow-md space-y-8 h-max">
-          {/* Filter by Institute */}
-          {/* <section aria-label="Filter by Institute/University">
-            <h2 className="text-lg font-semibold mb-3">
-               Institute/University
-            </h2>
-            <div className="max-h-40  rounded-md p-2">
-              {instituteOptions.map((institute) => (
-                <label
-                  key={institute}
-                  className="flex items-center mb-1 cursor-pointer select-none"
-                >
-                  <input
-                    type="checkbox"
-                    className="mr-2 accent-yellow-500"
-                    checked={filterInstitutes.includes(institute)}
-                    onChange={() => toggleInstitute(institute)}
-                  />
-                  <span>{institute}</span>
-                </label>
-              ))}
-            </div>
-          </section> */}
-
-          {/* Filter by Type */}
-          <section aria-label="Filter by Type">
-            <h2 className="text-lg font-semibold mb-3"> Type</h2>
-            <div className="space-y-2">
-              {types.map((type) => (
-                <label
-                  key={type}
-                  className="flex items-center cursor-pointer select-none"
-                >
-                  <input
-                    type="checkbox"
-                    className="mr-2 accent-yellow-500"
-                    checked={filterTypes.includes(type)}
-                    onChange={() => toggleType(type)}
-                  />
-                  <span>{type}</span>
-                </label>
-              ))}
-            </div>
-          </section>
-
-          {/* Filter by Date */}
-          <section aria-label="Filter by Date">
-            <h2 className="text-lg font-semibold mb-3"> Date</h2>
-            <div className="space-y-2">
-              {dates.map((d) => (
-                <label
-                  key={d}
-                  className="flex items-center cursor-pointer select-none"
-                >
-                  <input
-                    type="radio"
-                    name="dateFilter"
-                    className="mr-2 accent-yellow-500"
-                    checked={filterDate === d}
-                    onChange={() => setFilterDate(d)}
-                  />
-                  <span>{d}</span>
-                </label>
-              ))}
-            </div>
-            {filterDate === "Custom" && (
-              <div className="mt-3 space-y-1">
-                <label>
-                  From:{" "}
-                  <input
-                    type="date"
-                    className="border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                    value={customDate.from}
-                    onChange={(e) =>
-                      setCustomDate((prev) => ({ ...prev, from: e.target.value }))
-                    }
-                  />
-                </label>
-                <label>
-                  To:{" "}
-                  <input
-                    type="date"
-                    className="border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                    value={customDate.to}
-                    onChange={(e) =>
-                      setCustomDate((prev) => ({ ...prev, to: e.target.value }))
-                    }
-                  />
-                </label>
-              </div>
-            )}
-          </section>
-        </aside>
-
-        {/* Main Feed Area */}
-        <main className="flex-1 space-y-6">
-          {visibleNews.length === 0 && (
-            <p className="text-center text-gray-500">No news found.</p>
-          )}
-
-          {visibleNews.map((item) => (
-            <article
-              key={item.id}
-              className="bg-gray-100 rounded-lg shadow-md p-5 hover:shadow-lg transition-shadow duration-500 relative group"
-            >
-              {/* Institute Logo and Name */}
-              <div className="flex items-center space-x-4 mb-3">
-                <img
-                  src={item.instituteLogo}
-                  alt={`${item.instituteName} logo`}
-                  className="w-12 h-12 rounded-full object-cover border border-gray-600"
-                />
-                <h3 className="text-xl font-semibold">{item.instituteName}</h3>
-              </div>
-
-              {/* Post Title */}
-              <h4 className="text-lg font-bold mb-1 text-left hover:text-gray-800 cursor-pointer transition-colors duration-300">
-                {item.title}
-              </h4>
-
-              {/* Short Description */}
-              <p className="text-gray-700 mb-3 line-clamp-3 text-left">
-                {item.description}
-                <button
-                  className="ml-2 text-gray-800  hover:underline focus:outline-none"
-                  aria-label={`Read more about ${item.title}`}
-                >
-                  Read More
-                </button>
-              </p>
-
-              {/* Tags */}
-              <div className="mb-3 space-x-2 text-left">
-                {item.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="inline-block bg-gray-800 text-yellow-500 rounded-full px-3 py-1 text-sm font-medium text-left"
+        {/* Content Section */}
+        <div className="flex flex-col lg:flex-row max-w-7xl mx-auto pt-6 px-4 gap-6 flex-1">
+          {/* Left Sidebar Filters */}
+          <aside className="w-full lg:w-72 order-1 lg:order-none sticky top-20 self-start bg-white rounded-lg p-4 sm:p-6 shadow-md space-y-6 sm:space-y-8 h-max">
+            {/* Filter by Type */}
+            <section aria-label="Filter by Type">
+              <h2 className="text-lg font-semibold mb-3">Type</h2>
+              <div className="space-y-2 text-sm sm:text-base">
+                {types.map((type) => (
+                  <label
+                    key={type}
+                    className="flex items-center cursor-pointer select-none"
                   >
-                    #{tag}
-                  </span>
+                    <input
+                      type="checkbox"
+                      className="mr-2 accent-yellow-500"
+                      checked={filterTypes.includes(type)}
+                      onChange={() => toggleType(type)}
+                    />
+                    <span>{type}</span>
+                  </label>
                 ))}
               </div>
+            </section>
 
-              {/* Media */}
-              {item.mediaType === "image" && (
-                <img
-                  src={item.mediaSrc}
-                  alt={`Media for ${item.title}`}
-                  className="w-full rounded-md mb-3 max-h-60 object-cover text-left"
-                />
-              )}
-              {item.mediaType === "video" && (
-                <video
-                  controls
-                  src={item.mediaSrc}
-                  className="w-full rounded-md mb-3 max-h-60"
-                >
-                  Your browser does not support the video tag.
-                </video>
-              )}
-              {/* {item.mediaType === "pdf" && (
-                <a
-                  href={item.mediaSrc}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-yellow-600 hover:underline"
-                >
-                  View PDF
-                </a>
-              )} */}
-
-              {/* CTA Buttons */}
-              <div className="flex space-x-4 mb-3">
-                <button className="bg-gray-800 text-white px-4 py-2 rounded-md shadow hover:bg-yellow-500 transition">
-                  Apply Now
-                </button>
-                <button className="bg-gray-800 text-white px-4 py-2 rounded-md shadow hover:bg-yellow-500 transition">
-                  Know More
-                </button>
+            {/* Filter by Date */}
+            <section aria-label="Filter by Date">
+              <h2 className="text-lg font-semibold mb-3">Date</h2>
+              <div className="space-y-2 text-sm sm:text-base">
+                {dates.map((d) => (
+                  <label
+                    key={d}
+                    className="flex items-center cursor-pointer select-none"
+                  >
+                    <input
+                      type="radio"
+                      name="dateFilter"
+                      className="mr-2 accent-yellow-500"
+                      checked={filterDate === d}
+                      onChange={() => setFilterDate(d)}
+                    />
+                    <span>{d}</span>
+                  </label>
+                ))}
               </div>
+              {filterDate === "Custom" && (
+                <div className="mt-3 space-y-1 text-sm sm:text-base">
+                  <label>
+                    From:{" "}
+                    <input
+                      type="date"
+                      className="border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-yellow-500 w-full sm:w-auto"
+                      value={customDate.from}
+                      onChange={(e) =>
+                        setCustomDate((prev) => ({ ...prev, from: e.target.value }))
+                      }
+                    />
+                  </label>
+                  <label>
+                    To:{" "}
+                    <input
+                      type="date"
+                      className="border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-yellow-500 w-full sm:w-auto"
+                      value={customDate.to}
+                      onChange={(e) =>
+                        setCustomDate((prev) => ({ ...prev, to: e.target.value }))
+                      }
+                    />
+                  </label>
+                </div>
+              )}
+            </section>
+          </aside>
 
-              {/* Engagement Options */}
-              <div className="flex space-x-6 text-gray-800  transition-colors duration-300">
-                <button
-                  aria-label="Like"
-                  className="flex items-center space-x-1  focus:outline-none"
-                >
-                 <i class="fa-solid fa-heart"></i>
-                  <span>Like</span>
-                </button>
-                <button
-                  aria-label="Share"
-                  className="flex items-center space-x-1  transition focus:outline-none "
-                >
-                 <i class="fa-solid fa-share-nodes"></i>
-                  <span>Share</span>
-                </button>
-                <button
-                  aria-label="Save"
-                  className="flex items-center space-x-1 "
-                >
-                  <i class="fa-regular fa-bookmark"></i>
-                  <span>Save</span>
-                </button>
-              </div>
-            </article>
-          ))}
+          {/* Main Feed Area */}
+          <main className="flex-1 w-full order-2 lg:order-none space-y-4 sm:space-y-6">
+            {visibleNews.length === 0 && (
+              <p className="text-center text-gray-500 text-sm sm:text-base">No news found.</p>
+            )}
 
-          {/* Load More Button */}
-          {visibleCount < sortedNews.length && (
-            <div className="flex justify-center mt-4">
-              <button
-                onClick={loadMore}
-                className="bg-gray-800 text-white px-6 py-3 rounded-md shadow hover:bg-yellow-600 transition focus:outline-none focus:ring-4 focus:ring-yellow-400"
+            {visibleNews.map((item) => (
+              <article
+                key={item.id}
+                className="bg-gray-100 rounded-lg shadow-md p-4 sm:p-5 hover:shadow-lg transition-shadow duration-500 relative group w-full"
               >
-                Load More News & Updates
-              </button>
-            </div>
-          )}
-        </main>
+                {/* Institute Logo and Name */}
+                <div className="flex items-center space-x-3 sm:space-x-4 mb-3">
+                  <img
+                    src={item.instituteLogo}
+                    alt={`${item.instituteName} logo`}
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border border-gray-600 flex-shrink-0"
+                  />
+                  <h3 className="text-lg sm:text-xl font-semibold truncate">{item.instituteName}</h3>
+                </div>
 
-        {/* Right Sidebar */}
-        <aside className="w-72 sticky top-20 self-start bg-white rounded-lg p-6 shadow-md space-y-10 h-max">
-          {/* Featured / Sponsored Universities */}
-          <section aria-label="Featured or Sponsored Universities">
-            <h2 className="text-lg font-semibold mb-4">
-              Featured / Sponsored Universities
-            </h2>
-            <ul className="space-y-2">
-              {featuredUniversities.map((uni) => (
-                <li
-                  key={uni}
-                  className="p-2 bg-gray-400 text-gray-800 rounded-md font-medium select-none cursor-default"
+                {/* Post Title */}
+                <h4 className="text-base sm:text-lg font-bold mb-1 text-left hover:text-gray-800 cursor-pointer transition-colors duration-300 line-clamp-2 sm:line-clamp-none">
+                  {item.title}
+                </h4>
+
+                {/* Short Description */}
+                <p className="text-gray-700 mb-3 line-clamp-3 text-left text-sm sm:text-base">
+                  {item.description}
+                  <button
+                    className="ml-2 text-gray-800 hover:underline focus:outline-none"
+                    aria-label={`Read more about ${item.title}`}
+                  >
+                    Read More
+                  </button>
+                </p>
+
+                {/* Tags */}
+                <div className="mb-3 flex flex-wrap gap-1 sm:space-x-2 text-left">
+                  {item.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-block bg-gray-800 text-yellow-500 rounded-full px-2 sm:px-3 py-1 text-xs sm:text-sm font-medium"
+                    >
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Media */}
+                {item.mediaType === "image" && (
+                  <img
+                    src={item.mediaSrc}
+                    alt={`Media for ${item.title}`}
+                    className="w-full rounded-md mb-3 max-h-48 sm:max-h-60 object-cover"
+                  />
+                )}
+                {item.mediaType === "video" && (
+                  <video
+                    controls
+                    src={item.mediaSrc}
+                    className="w-full rounded-md mb-3 max-h-48 sm:max-h-60"
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                )}
+                {/* {item.mediaType === "pdf" && (
+                  <a
+                    href={item.mediaSrc}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-yellow-600 hover:underline"
+                  >
+                    View PDF
+                  </a>
+                )} */}
+
+                {/* CTA Buttons */}
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-3">
+                  <button className="bg-gray-800 text-white px-4 py-2 rounded-md shadow hover:bg-yellow-500 transition w-full sm:w-auto text-sm sm:text-base">
+                    Apply Now
+                  </button>
+                  <button className="bg-gray-800 text-white px-4 py-2 rounded-md shadow hover:bg-yellow-500 transition w-full sm:w-auto text-sm sm:text-base">
+                    Know More
+                  </button>
+                </div>
+
+                {/* Engagement Options */}
+                <div className="flex space-x-4 sm:space-x-6 text-gray-800 transition-colors duration-300 text-sm sm:text-base">
+                  <button
+                    aria-label="Like"
+                    className="flex items-center space-x-1 focus:outline-none"
+                  >
+                    <i className="fa-solid fa-heart"></i>
+                    <span>Like</span>
+                  </button>
+                  <button
+                    aria-label="Share"
+                    className="flex items-center space-x-1 transition focus:outline-none"
+                  >
+                    <i className="fa-solid fa-share-nodes"></i>
+                    <span>Share</span>
+                  </button>
+                  <button
+                    aria-label="Save"
+                    className="flex items-center space-x-1"
+                  >
+                    <i className="fa-regular fa-bookmark"></i>
+                    <span>Save</span>
+                  </button>
+                </div>
+              </article>
+            ))}
+
+            {/* Load More Button */}
+            {visibleCount < sortedNews.length && (
+              <div className="flex justify-center mt-4">
+                <button
+                  onClick={loadMore}
+                  className="bg-gray-800 text-white px-6 py-3 rounded-md shadow hover:bg-yellow-600 transition focus:outline-none focus:ring-4 focus:ring-yellow-400 text-sm sm:text-base w-full sm:w-auto"
                 >
-                  {uni}
-                </li>
-              ))}
-            </ul>
-          </section>
+                  Load More News & Updates
+                </button>
+              </div>
+            )}
+          </main>
 
-          {/* Trending News */}
-          <section aria-label="Trending News">
-            <h2 className="text-lg font-semibold mb-4">Trending News</h2>
-            <ul className="list-disc list-inside space-y-1 text-gray-700 text-left">
-              {trendingNews.map((news, idx) => (
-                <li key={idx} className="hover:text-yellow-600 cursor-pointer transition">
-                  {news}
-                </li>
-              ))}
-            </ul>
-          </section>
+          {/* Right Sidebar */}
+          <aside className="w-full lg:w-72 order-3 lg:order-none sticky top-20 self-start bg-white rounded-lg p-4 sm:p-6 shadow-md space-y-6 sm:space-y-10 h-max">
+            {/* Featured / Sponsored Universities */}
+            <section aria-label="Featured or Sponsored Universities">
+              <h2 className="text-lg font-semibold mb-4">Featured / Sponsored Universities</h2>
+              <ul className="space-y-2 text-sm sm:text-base">
+                {featuredUniversities.map((uni) => (
+                  <li
+                    key={uni}
+                    className="p-2 bg-gray-400 text-gray-800 rounded-md font-medium select-none cursor-default"
+                  >
+                    {uni}
+                  </li>
+                ))}
+              </ul>
+            </section>
 
-          {/* Scholarship of the Week */}
-          <section aria-label="Scholarship of the Week" className="bg-yellow-50 border border-yellow-300 rounded-md p-4">
-            <h2 className="text-lg font-semibold mb-2">
-              Scholarship of the Week
-            </h2>
-            <p className="font-bold text-yellow-900">{scholarshipOfWeek.title}</p>
-            <p>Institute: {scholarshipOfWeek.institute}</p>
-            <p className="italic text-yellow-700">Deadline: {scholarshipOfWeek.deadline}</p>
-          </section>
-
-          {/* Upcoming Webinars/Exams Mini Calendar */}
+            {/* Trending News */}
             <section aria-label="Trending News">
-            <h2 className="text-lg font-semibold mb-4">Upcoming Webinars/Exams</h2>
-            <ul className="list-disc list-inside space-y-1 text-gray-700 text-left">
-              {webinars.map((news, idx) => (
-                <li key={idx} className="hover:text-yellow-600 cursor-pointer transition">
-                  {news}
-                </li>
-              ))}
-            </ul>
-          </section>
-        </aside>
-      </div>
+              <h2 className="text-lg font-semibold mb-4">Trending News</h2>
+              <ul className="list-disc list-inside space-y-1 text-gray-700 text-left text-sm sm:text-base">
+                {trendingNews.map((news, idx) => (
+                  <li key={idx} className="hover:text-yellow-600 cursor-pointer transition">
+                    {news}
+                  </li>
+                ))}
+              </ul>
+            </section>
 
-      {/* Footer
-      <footer className="bg-gray-400 text-gray-900 py-6 mt-10 select-none">
-        <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-6 text-sm font-semibold">
-          <a href="#" className="hover:text-yellow-700 transition">
-            About
-          </a>
-          <a href="#" className="hover:text-yellow-700 transition">
-            Contact
-          </a>
-          <a href="#" className="hover:text-yellow-700 transition">
-            Privacy Policy
-          </a>
-          <a href="#" className="hover:text-yellow-700 transition">
-            Social Media
-          </a>
+            {/* Scholarship of the Week */}
+            <section aria-label="Scholarship of the Week" className="bg-yellow-50 border border-yellow-300 rounded-md p-4 text-sm sm:text-base">
+              <h2 className="text-lg font-semibold mb-2">
+                Scholarship of the Week
+              </h2>
+              <p className="font-bold text-yellow-900">{scholarshipOfWeek.title}</p>
+              <p>Institute: {scholarshipOfWeek.institute}</p>
+              <p className="italic text-yellow-700">Deadline: {scholarshipOfWeek.deadline}</p>
+            </section>
+
+            {/* Upcoming Webinars/Exams Mini Calendar */}
+            <section aria-label="Upcoming Webinars/Exams">
+              <h2 className="text-lg font-semibold mb-4">Upcoming Webinars/Exams</h2>
+              <ul className="list-disc list-inside space-y-1 text-gray-700 text-left text-sm sm:text-base">
+                {webinars.map((news, idx) => (
+                  <li key={idx} className="hover:text-yellow-600 cursor-pointer transition">
+                    {news}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </aside>
         </div>
-      </footer> */}
-    </div>
-     <Footer />
-     </>
+      </div>
+      <Footer />
+    </>
   );
 };
 
