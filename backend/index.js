@@ -77,11 +77,25 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage });
 
 /* ------------------------ Mongo connection ------------------------ */
-const mongoURI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/findmycollege";
+const mongoURI = process.env.MONGO_URI;
+
+if (!mongoURI) {
+  console.error("❌ MONGO_URI not found in .env");
+  process.exit(1);
+}
+
 mongoose
-  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
+  .connect(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 10000,
+  })
+  .then(() => console.log("✅ Connected to MongoDB Atlas"))
+  .catch((err) => {
+    console.error("❌ MongoDB Atlas connection error:", err.message);
+    process.exit(1);
+  });
+
 
 /* ------------------------ Registration Schema ------------------------ */
 const registrationSchema = new mongoose.Schema({

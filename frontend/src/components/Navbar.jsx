@@ -24,7 +24,9 @@ const Navbar = () => {
   const [user, setUser] = useState(null);
   const [userId, setUserId] = useState(null); // ✅ Initialize as null
   const [displayName, setDisplayName] = useState(""); // ✅ Initialize as empty
+  const [isVisible, setIsVisible] = useState(true); // New state for navbar visibility
   const userMenuRef = useRef(null);
+  const lastScrollY = useRef(0); // Ref to track last scroll position
   const navigate = useNavigate();
   const auth = getAuth();
 
@@ -96,6 +98,42 @@ const Navbar = () => {
     };
   }, [auth]);
 
+  // New useEffect for scroll handling: hide on scroll down, show after stop
+  useEffect(() => {
+    let timeoutId;
+    let ticking = false;
+
+    const updateVisibility = () => {
+      const scrollY = window.scrollY;
+
+      if (scrollY > lastScrollY.current && scrollY > 50) {
+        setIsVisible(false);
+      }
+
+      lastScrollY.current = scrollY;
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(updateVisibility);
+        ticking = true;
+      }
+
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setIsVisible(true);
+      }, 150); // Show after 150ms of no scrolling
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
   // Close dropdown if clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -118,7 +156,11 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-900 text-white shadow-md relative">
+    <nav 
+      className={`fixed top-0 left-0 right-0 z-50 bg-gray-900 text-white shadow-md transition-all duration-300 ease-in-out ${
+        isVisible ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
       <div className="flex items-center justify-between px-6 py-4">
         {/* Logo */}
         <div className="flex items-center space-x-3">

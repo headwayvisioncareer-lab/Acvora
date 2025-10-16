@@ -81,8 +81,8 @@ export default function Header() {
       </div>
 
       {/* Content container */}
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10">
-        <div className="mt-6 sm:mt-10 md:mt-14 lg:mt-20 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10 pt-32">
+        <div className="mt-0 sm:mt-2 md:mt-4 lg:mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
           {/* Text + CTAs */}
           <div className="max-w-2xl">
             <p className="text-teal-300 font-semibold tracking-wide uppercase text-sm sm:text-[13px]">
@@ -125,7 +125,7 @@ export default function Header() {
           </div>
 
           {/* Search card */}
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 md:p-7 border border-white/15 shadow-xl animate-float mt-40 relative">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 md:p-7 border border-white/15 shadow-xl animate-float mt-28 relative">
             <label htmlFor="site-search" className="sr-only">
               Search colleges, courses, exams, articles, news
             </label>
