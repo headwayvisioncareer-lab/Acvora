@@ -7,15 +7,17 @@
   border-right: 1px solid #e5e7eb; /* soft gray divider */
   flex-shrink: 0;
   overflow-y: auto;
-  transition: transform 0.3s ease;
+  transition: width 0.3s ease; /* Smooth width transition */
   font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #111827; /* charcoal text */
   box-shadow: 2px 0 6px rgba(0, 0, 0, 0.04); /* subtle depth */
 }
 
-/* Closed (for toggle) */
+/* Closed (collapses width to 0, freeing space) */
 .ad-sidebar.closed {
-  transform: translateX(-240px);
+  width: 0;
+  overflow: hidden; /* Clips content when collapsed */
+  border-right: none; /* Remove border when hidden */
 }
 
 /* ===== Premium Scrollbar ===== */
