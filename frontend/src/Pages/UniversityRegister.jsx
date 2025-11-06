@@ -128,7 +128,7 @@ const handleSubmit = async (e) => {
     // -----------------------------
     // 2. Register university
     // -----------------------------
-    const baseUrl = "http://localhost:5000";
+    const baseUrl = "https://acvora-1.onrender.com";
 
     const res = await fetch(`${baseUrl}/api/university-registration`, {
       method: "POST",

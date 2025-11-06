@@ -1,11 +1,10 @@
 // src/api.js
 import axios from "axios";
 
-// Base URL of your backend
+// Create axios instance with backend URL from .env
 const API = axios.create({
-  baseURL: "https://university-backend-8ivj.onrender.com/api"
+  baseURL: process.env.REACT_APP_API_URL + "/api"
 });
-
 
 // Function to save a student
 export const saveStudent = async (studentData) => {
@@ -13,7 +12,8 @@ export const saveStudent = async (studentData) => {
     const response = await API.post("/students", studentData);
     return response.data; // { message: "Student saved successfully!" }
   } catch (error) {
-    throw error; // Let the component handle the error
+    console.error("Error saving student:", error);
+    throw error;
   }
 };
 
@@ -23,6 +23,7 @@ export const getStudents = async () => {
     const response = await API.get("/students");
     return response.data; // Array of students
   } catch (error) {
+    console.error("Error fetching students:", error);
     throw error;
   }
 };
