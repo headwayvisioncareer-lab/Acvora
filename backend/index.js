@@ -41,7 +41,7 @@ cloudinary.config({
 /* ------------------------ CORS ------------------------ */
 const ALLOWED_ORIGINS = [
   "https://fmc-k3q06chdb-ankits-projects-a5a1ce25.vercel.app",
-  "http://localhost:3000", // optional for local testing
+  "https://acvora-1.onrender.com", // optional for local testing
 ].filter(Boolean);
 
 
