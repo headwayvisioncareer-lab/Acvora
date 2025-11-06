@@ -21,7 +21,7 @@ const MyCourses = () => {
     setError(null);
 
     axios
-      .get(`http://localhost:5000/api/savedCourses/${userId}`)
+      .get(`https://acvora-1.onrender.com/api/savedCourses/${userId}`)
       .then((res) => {
         setSavedCourses(res.data);
       })

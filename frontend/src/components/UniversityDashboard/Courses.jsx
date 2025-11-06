@@ -26,7 +26,7 @@ export default function Courses({ universityId }) {
     applyLink: "",
   });
 
-  const baseUrl = "http://localhost:5000";
+  const baseUrl = "https://acvora-1.onrender.com";
 
   // Fetch courses
   useEffect(() => {

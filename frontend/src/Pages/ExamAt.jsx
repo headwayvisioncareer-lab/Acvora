@@ -26,7 +26,7 @@ export default function ExamAlertsNotifications() {
   // Submit form to backend
   const handleSubmit = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/api/exams", formData);
+      const res = await axios.post("https://acvora-1.onrender.com/api/exams", formData);
       alert("✅ Exam data saved successfully!");
       console.log("Saved exam:", res.data);
 

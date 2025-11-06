@@ -121,7 +121,7 @@ export default function CourseRegister() {
         data.append("topInstituteDescriptions[]", item.description);
       });
 
-      const res = await fetch("http://localhost:5000/api/courses", {
+      const res = await fetch("https://acvora-1.onrender.com/api/courses", {
         method: "POST",
         body: data,
       });

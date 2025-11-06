@@ -9,7 +9,7 @@ export default function ViewScholarships() {
   useEffect(() => {
     const fetchScholarships = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/universities/${id}/scholarships`);
+        const res = await fetch(`https://acvora-1.onrender.com/api/universities/${id}/scholarships`);
         const data = await res.json();
         setScholarships(data);
       } catch (err) {

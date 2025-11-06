@@ -8,7 +8,7 @@ const Applications = ({ students, setStudents, addPayment }) => {
 
   const handleStatusChange = async (id, status) => {
     try {
-      await axios.put(`http://localhost:5000/api/students/${id}`, { status });
+      await axios.put(`https://acvora-1.onrender.com/api/students/${id}`, { status });
       setStudents((prev) =>
         prev.map((s) => (s.id === id ? { ...s, status } : s))
       );

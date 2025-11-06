@@ -12,7 +12,7 @@ export default function PartnerInstitutes() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [institutes, setInstitutes] = useState([]);
 
-  const BASE_URL = "http://localhost:5000";
+  const BASE_URL = "https://acvora-1.onrender.com";
 
   useEffect(() => {
     const fetchInstitutes = async () => {

@@ -324,7 +324,7 @@ const AddStudentPopup = ({
       }
 
       // ---------- Send to backend (instead of Firestore) ----------
-      const backendUrl = "http://localhost:5000/api/students";
+      const backendUrl = "https://acvora-1.onrender.com/api/students";
 
       const payload = {
         name: formData.fullName,

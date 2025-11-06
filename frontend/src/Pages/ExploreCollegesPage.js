@@ -269,7 +269,7 @@ const ExploreCollegesPage = () => {
   useEffect(() => {
     const fetchUniversities = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/universities");
+        const res = await axios.get("https://acvora-1.onrender.com/api/universities");
         if (res.data.success) {
           setUniversities(res.data.data);
         } else if (Array.isArray(res.data)) {

@@ -11,7 +11,7 @@ const Students = ({ students, setStudents, addStudent, updateStudent, deleteStud
   // Delete student backend + state
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/students/${id}`);
+      await axios.delete(`https://acvora-1.onrender.com/api/students/${id}`);
       deleteStudent(id);
     } catch (err) {
       console.error("Error deleting student:", err);

@@ -36,7 +36,7 @@ const Facilities = ({ universityId }) => {
     if (!universityId) return;
 
     axios
-      .get(`http://localhost:5000/api/universities/${universityId}`)
+      .get(`https://acvora-1.onrender.com/api/universities/${universityId}`)
       .then((res) => {
         console.log("📥 API response:", res.data);
         setFacilities(res.data.facilities || []);
