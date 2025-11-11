@@ -42,7 +42,6 @@ cloudinary.config({
 const ALLOWED_ORIGINS = [
   "http://localhost:3000", // 👈 local frontend
   "https://acvora.vercel.app", // 👈 production frontend
-  "https://fmc-k3q06chdb-ankits-projects-a5a1ce25.vercel.app",
   "https://acvora-1.onrender.com"
 ];
 
