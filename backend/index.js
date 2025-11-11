@@ -38,25 +38,35 @@ cloudinary.config({
   api_secret: process.env.CLOUD_API_SECRET,
 });
 
-/* ------------------------ CORS ------------------------ */
+/* ------------------------ CORS (FIXED) ------------------------ */
 const ALLOWED_ORIGINS = [
   "http://localhost:3000", // 👈 local frontend
-  "https://acvora.vercel.app", // 👈 production frontend (if you use this)
+  "https://acvora.vercel.app", // 👈 production frontend
   "https://fmc-k3q06chdb-ankits-projects-a5a1ce25.vercel.app",
   "https://acvora-1.onrender.com"
 ];
 
-
+// ✅ must be above express.json and all routes
 app.use(
   cors({
-    origin: ALLOWED_ORIGINS,
+    origin: (origin, callback) => {
+      if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.warn("❌ Blocked by CORS:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// Handle preflight requests
 app.options("*", cors());
 
+// ✅ Parse JSON and URL-encoded data after CORS setup
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
