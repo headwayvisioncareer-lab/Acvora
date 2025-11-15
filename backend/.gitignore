@@ -1,0 +1,56 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Dist / Build files
+dist/
+build/
+
+# Uploads (local storage)
+uploads/
+
+# Cache
+.cache/
+.tmp/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Lock files
+package-lock.json
+yarn.lock
+
+# Coverage
+coverage/
+
+# PM2 logs
+.pids
+*.pid
+*.seed
+*.pid.lock
+
+# Temp files
+*.tmp
+*.temp
+
+# TypeScript build output (if using TS)
+*.tsbuildinfo
+
+# PDF or generated files
+*.pdf
