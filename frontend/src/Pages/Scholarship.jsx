@@ -132,7 +132,10 @@ function ScholarshipCard({ data, user, onToggleSave, savedScholarships }) {
   const logo = universityId?.logo?.[0];
   const program = data.category || "BCA";
 
-  const saved = savedScholarships.some(id => id.toString() === _id);
+  // Fix: Check if scholarship is saved
+  const saved = savedScholarships.some(savedScholarship =>
+    savedScholarship._id === _id || savedScholarship.toString() === _id
+  );
 
   const toggleSave = async () => {
     if (!user?.userId) {
@@ -142,15 +145,31 @@ function ScholarshipCard({ data, user, onToggleSave, savedScholarships }) {
 
     try {
       const method = saved ? "DELETE" : "POST";
+
+      // FIXED: Correct API endpoint
       const res = await fetch(
-        `https://acvora-1.onrender.com/api/savedScholarships/${user.userId}/${_id}`,
-        { method }
+        `https://acvora-1.onrender.com/api/savedScholarships/${user.userId}`,
+        {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ scholarshipId: _id })
+        }
       );
-      if (!res.ok) throw new Error("Failed to update saved scholarships");
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to update saved scholarships");
+      }
+
+      const result = await res.json();
+      console.log('Save toggle result:', result);
+
       onToggleSave(_id, !saved); // Callback to update parent state
     } catch (err) {
-      console.error(err);
-      alert("Error updating saved scholarships.");
+      console.error("Save toggle error:", err);
+      alert("Error updating saved scholarships: " + err.message);
     }
   };
 
@@ -209,7 +228,7 @@ function ScholarshipCard({ data, user, onToggleSave, savedScholarships }) {
 /* ---------------- Main Component ---------------- */
 export default function Scholarship() {
   const [scholarships, setScholarships] = useState([]);
-  const [savedScholarships, setSavedScholarships] = useState([]); // User's saved IDs/objects
+  const [savedScholarships, setSavedScholarships] = useState([]);
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState({
     region: "",
@@ -223,52 +242,94 @@ export default function Scholarship() {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("Upcoming");
 
-  // ✅ Quick fix: Get user from individual localStorage keys
+  // ✅ Get user from localStorage
   const user = {
     userId: localStorage.getItem("userId"),
     name: localStorage.getItem("name"),
     email: localStorage.getItem("email"),
   };
 
+  // Fetch all scholarships
   useEffect(() => {
     const fetchScholarships = async () => {
       setLoading(true);
+      setError(null);
       try {
+        console.log("Fetching scholarships...");
         const res = await fetch("https://acvora-1.onrender.com/api/scholarships");
-        if (!res.ok) throw new Error("Failed to fetch scholarships");
-        const data = await res.json();
-        const normalized = data.map((d) => ({ tags: [], ...d }));
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        const result = await res.json();
+        console.log("Scholarships API response:", result);
+
+        // FIXED: Handle different response structures
+        const scholarshipsData = result.data || result || [];
+        const normalized = scholarshipsData.map((d) => ({ tags: [], ...d }));
         setScholarships(normalized);
+
       } catch (err) {
+        console.error("Error fetching scholarships:", err);
         setError(err.message);
+        setScholarships([]);
       } finally {
         setLoading(false);
       }
     };
+
     fetchScholarships();
   }, []);
 
   // Fetch user's saved scholarships if logged in
   useEffect(() => {
     const fetchSaved = async () => {
-      if (!user?.userId) return;
+      if (!user?.userId) {
+        console.log("No user ID, skipping saved scholarships fetch");
+        return;
+      }
+
       try {
+        console.log("Fetching saved scholarships for user:", user.userId);
         const res = await fetch(`https://acvora-1.onrender.com/api/savedScholarships/${user.userId}`);
-        if (!res.ok) throw new Error("Failed to fetch saved scholarships");
-        const { savedScholarships } = await res.json();
-        setSavedScholarships(savedScholarships || []);
+
+        if (!res.ok) {
+          // If 404, it means no saved scholarships yet (this is normal)
+          if (res.status === 404) {
+            console.log("No saved scholarships found (404)");
+            setSavedScholarships([]);
+            return;
+          }
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        const result = await res.json();
+        console.log("Saved scholarships API response:", result);
+
+        // FIXED: Handle different response structures
+        const savedData = result.data || result.savedScholarships || result || [];
+        setSavedScholarships(savedData);
+
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching saved scholarships:", err);
+        // Don't show error to user for saved scholarships
+        setSavedScholarships([]);
       }
     };
-    if (user?.userId) fetchSaved();
+
+    fetchSaved();
   }, [user?.userId]);
 
   const handleToggleSave = (scholarshipId, isSaved) => {
     if (isSaved) {
-      setSavedScholarships(prev => [...prev, scholarshipId]);
+      // Add to saved
+      setSavedScholarships(prev => [...prev, { _id: scholarshipId }]);
     } else {
-      setSavedScholarships(prev => prev.filter(id => id.toString() !== scholarshipId.toString()));
+      // Remove from saved
+      setSavedScholarships(prev => prev.filter(item =>
+        item._id !== scholarshipId && item.toString() !== scholarshipId
+      ));
     }
   };
 
@@ -277,18 +338,30 @@ export default function Scholarship() {
     return scholarships.filter((s) => {
       const name = (s.name || "").toLowerCase();
       const provider = (s.provider || "").toLowerCase();
-      const status = (s.status || "").toLowerCase();
+      const status = (s.status || "Open").toLowerCase();
 
-      return (
-        (q === "" || name.includes(q) || provider.includes(q)) &&
-        (!filters.region || s.region?.toLowerCase() === filters.region.toLowerCase()) &&
-        (!filters.category || s.category?.toLowerCase() === filters.category.toLowerCase()) &&
-        (!filters.educationLevel || s.educationLevel?.toLowerCase() === filters.educationLevel.toLowerCase()) &&
-        (!filters.type || s.type?.toLowerCase() === filters.type.toLowerCase()) &&
-        (!filters.mode || s.status?.toLowerCase() === filters.mode.toLowerCase()) &&
-        (!filters.deadlineState || status === filters.deadlineState.toLowerCase()) &&
-        (activeTab === "Upcoming" || activeTab === "Ongoing" || activeTab === "Closed")
-      );
+      // Text search
+      const matchesSearch = q === "" ||
+        name.includes(q) ||
+        provider.includes(q) ||
+        (s.tags && s.tags.some(tag => tag.toLowerCase().includes(q)));
+
+      // Filter matches
+      const matchesFilters =
+        (!filters.region || (s.region || "").toLowerCase() === filters.region.toLowerCase()) &&
+        (!filters.category || (s.category || "").toLowerCase() === filters.category.toLowerCase()) &&
+        (!filters.educationLevel || (s.educationLevel || "").toLowerCase() === filters.educationLevel.toLowerCase()) &&
+        (!filters.type || (s.type || "").toLowerCase() === filters.type.toLowerCase()) &&
+        (!filters.mode || (s.mode || "").toLowerCase() === filters.mode.toLowerCase()) &&
+        (!filters.deadlineState || status === filters.deadlineState.toLowerCase());
+
+      // Tab filter
+      const matchesTab = activeTab === "All" ||
+        (activeTab === "Upcoming" && status === "upcoming") ||
+        (activeTab === "Ongoing" && status === "open") ||
+        (activeTab === "Closed" && status === "closed");
+
+      return matchesSearch && matchesFilters && matchesTab;
     });
   }, [scholarships, query, filters, activeTab]);
 
@@ -307,7 +380,7 @@ export default function Scholarship() {
             <div className="scholar-results-header">
               <h2 className="scholar-results-title">University Scholarships Dashboard.</h2>
               <div className="scholar-tabs">
-                {["Upcoming", "Ongoing", "Closed"].map((tab) => (
+                {["All", "Upcoming", "Ongoing", "Closed"].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
@@ -322,9 +395,38 @@ export default function Scholarship() {
             {loading ? (
               <div className="scholar-loading">Loading scholarships...</div>
             ) : error ? (
-              <div className="scholar-error">Error: {error}</div>
+              <div className="scholar-error">
+                Error: {error}
+                <button
+                  onClick={() => window.location.reload()}
+                  className="scholar-retry-btn"
+                >
+                  Retry
+                </button>
+              </div>
             ) : filtered.length === 0 ? (
-              <div className="scholar-empty">No scholarships found for your filters.</div>
+              <div className="scholar-empty">
+                No scholarships found for your filters.
+                {scholarships.length > 0 && (
+                  <button
+                    onClick={() => {
+                      setQuery("");
+                      setFilters({
+                        region: "",
+                        category: "",
+                        educationLevel: "",
+                        type: "",
+                        mode: "",
+                        deadlineState: "",
+                      });
+                      setActiveTab("All");
+                    }}
+                    className="scholar-clear-filters-btn"
+                  >
+                    Clear Filters
+                  </button>
+                )}
+              </div>
             ) : (
               <div className="scholar-grid">
                 {filtered.map((s) => (
